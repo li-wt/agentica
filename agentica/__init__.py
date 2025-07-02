@@ -125,6 +125,9 @@ from agentica.tools.jina_tool import JinaTool
 from agentica.tools.shell_tool import ShellTool
 from agentica.tools.text_analysis_tool import TextAnalysisTool
 from agentica.tools.weather_tool import WeatherTool
+# Custom tools
+from agentica.tools.random_tool import RandomTool
+from agentica.tools.text_processor_tool import TextProcessorTool
 
 # agent
 from agentica.agent import Agent

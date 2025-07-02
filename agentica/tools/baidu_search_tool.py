@@ -275,6 +275,7 @@ class BaiduSearchTool(Tool):
                     "rank": str(idx),
                 }
             )
+        print(res)
         return json.dumps(res, indent=2, ensure_ascii=False)
 
 
