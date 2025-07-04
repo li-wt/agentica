@@ -14,7 +14,9 @@ from agentica.utils.log import logger
 try:
     from duckduckgo_search import DDGS
 except ImportError:
-    raise ImportError("`duckduckgo-search` not installed. Please install using `pip install duckduckgo-search`")
+    raise ImportError(
+        "`duckduckgo-search` not installed. Please install using `pip install duckduckgo-search`"
+    )
 
 # Create a default context for HTTPS requests (not recommended for production)
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -22,12 +24,16 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 class DuckDuckGoTool(Tool):
     def __init__(
-            self,
-            search: bool = True,
-            news: bool = True,
-            headers: Optional[Any] = None,
-            proxy: Optional[Any] = None,
-            timeout: Optional[int] = 10,
+        self,
+        search: bool = True,
+        news: bool = True,
+        headers: Optional[Any] = None,
+        proxy: Optional[Any] = {
+            "http": "http://192.168.100.237:7899",
+            "https": "http://192.168.100.237:7899",
+        },
+        timeout: Optional[int] = 10,
+        max_results: Optional[int] = 5,
     ):
         super().__init__(name="duckduckgo_tool")
 
@@ -53,11 +59,13 @@ class DuckDuckGoTool(Tool):
                 search_results.append(r)
         for idx, result in enumerate(search_results):
             if result["body"] and result["href"]:
-                contexts.append({
-                    "name": result["title"],
-                    "url": result["href"],
-                    "snippet": result["body"]
-                })
+                contexts.append(
+                    {
+                        "name": result["title"],
+                        "url": result["href"],
+                        "snippet": result["body"],
+                    }
+                )
         return contexts
 
     def duckduckgo_search(self, query: str, max_results: int = 5) -> str:
@@ -103,8 +111,13 @@ class DuckDuckGoTool(Tool):
         return json.dumps(res, indent=2, ensure_ascii=False)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # from agentica.tools.duckduckgo_tool import DuckDuckGoTool
-    m = DuckDuckGoTool()
+    m = DuckDuckGoTool(
+        proxy={
+            "http": "http://192.168.100.237:7899",
+            "https": "http://192.168.100.237:7899",
+        }
+    )
     print(m.duckduckgo_search("Python"))
     print(m.duckduckgo_news("Python"))
